@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Навигация</title>
+    
+    <!-- Подключаем красивый шрифт от Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* Убираем стандартные отступы и настраиваем базовые стили */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Основной фон страницы - очень блеклый и приятный */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f4f8; /* Очень светлый серо-голубой */
+        }
+
+        /* Контейнер для нашего контента */
+        .card {
+            background-color: #ffffff; /* Белый, но можно сделать чуть темнее, например #fafcff */
+            padding: 40px 50px;
+            border-radius: 20px; /* Сильные скругления */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07); /* Мягкая тень для объема */
+            text-align: center;
+            max-width: 500px;
+            width: 90%; /* Адаптивность для мобильных */
+        }
+
+        /* Стили для приветствия */
+        .greeting {
+            color: #333d4b; /* Темно-серый, не чисто черный */
+            font-size: 1.8em; /* Крупный, но не огромный шрифт */
+            font-weight: 500;
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        /* Стили для кнопки-ссылки */
+        .nav-button {
+            display: inline-block;
+            background-color: #007aff; /* Приятный синий цвет */
+            color: #ffffff;
+            padding: 15px 35px;
+            border-radius: 20px; /* Такое же скругление, как у карточки */
+            text-decoration: none; /* Убираем подчеркивание у ссылки */
+            font-size: 1.1em;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Плавные переходы */
+        }
+
+        /* Эффект при наведении курсора на кнопку */
+        .nav-button:hover {
+            background-color: #005ecb; /* Чуть темнее при наведении */
+            transform: translateY(-2px); /* Легкий эффект "поднятия" */
+        }
+        
+        /* Адаптация для мобильных устройств */
+        @media (max-width: 600px) {
+            .card {
+                padding: 30px 25px;
+            }
+            .greeting {
+                font-size: 1.5em;
+            }
+            .nav-button {
+                padding: 12px 30px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <h1 id="greeting-text" class="greeting">Здравствуйте, что вас интересует?</h1>
+        <a href="timetable.html" class="nav-button">Расписание</a>
+    </div>
+
+    <script>
+        // Находим наш заголовок по ID
+        const greetingElement = document.getElementById('greeting-text');
+
+        // Получаем текущий час (от 0 до 23)
+        const currentHour = new Date().getHours();
+
+        let greetingMessage = '';
+
+        // Определяем приветствие в зависимости от времени
+        if (currentHour >= 5 && currentHour < 12) {
+            greetingMessage = 'Доброе утро';
+        } else if (currentHour >= 12 && currentHour < 18) {
+            greetingMessage = 'Добрый день';
+        } else if (currentHour >= 18 && currentHour < 23) {
+            greetingMessage = 'Добрый вечер';
+        } else {
+            greetingMessage = 'Доброй ночи';
+        }
+
+        // Устанавливаем полный текст приветствия
+        greetingElement.textContent = `${greetingMessage}, что вас интересует?`;
+    </script>
+
+</body>
+</html>
