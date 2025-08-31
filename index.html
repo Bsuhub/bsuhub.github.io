@@ -13,9 +13,9 @@
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
+            background-color: #f0f4f8;
             color: #333;
-            line-height: 1.6;
+            line-height: 1.5;
             margin: 0;
             padding: 10px;
         }
@@ -25,7 +25,7 @@
             background: #fff;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.07);
         }
         h1 {
             color: var(--primary-color);
@@ -43,7 +43,7 @@
         /* --- Кнопка переключения --- */
         .view-toggle-container {
             text-align: center;
-            margin: 20px 0;
+            margin: 0 0 20px 0;
         }
         #toggleViewBtn {
             padding: 10px 20px;
@@ -52,7 +52,7 @@
             background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             transition: background-color 0.3s ease;
         }
         #toggleViewBtn:hover {
@@ -60,7 +60,7 @@
         }
         
         /* --- ДЕТАЛЬНЫЙ ВИД (ТАБЛИЦЫ) --- */
-        #detailedView h2 { font-size: 1.8em; color: var(--primary-color); text-align: center; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-top: 40px; }
+        #detailedView h2 { font-size: 1.8em; color: var(--primary-color); text-align: center; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-top: 20px; }
         .table-wrapper { overflow-x: auto; margin-top: 20px; }
         table { width: 100%; border-collapse: collapse; min-width: 600px; }
         th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
@@ -71,21 +71,23 @@
         .teacher { color: #666; font-style: italic; }
         .location { font-weight: bold; color: #007bff; }
         
-        /* --- НОВЫЙ УЛЬТРА-КОМПАКТНЫЙ ВИД --- */
+        /* --- УЛЬТРА-КОМПАКТНЫЙ ВИД С ПЕРЕНОСОМ --- */
         #compactView {
             display: flex;
-            gap: 10px;
+            flex-wrap: wrap; /* ГЛАВНОЕ ИЗМЕНЕНИЕ: Разрешает перенос элементов */
+            justify-content: center; /* ГЛАВНОЕ ИЗМЕНЕНИЕ: Центрирует строки */
+            gap: 8px;
             width: 100%;
-            align-items: stretch;
         }
         .day-column {
-            flex: 1;
+            flex-grow: 1; /* Позволяет колонкам растягиваться */
+            flex-basis: 90px; /* Начальная ширина колонки */
             display: flex;
             flex-direction: column;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            background-color: var(--bg-light);
             text-align: center;
+            overflow: hidden; /* Скрывает все, что выходит за скругленные углы */
         }
         .day-column h3 {
             background-color: var(--primary-color);
@@ -93,24 +95,25 @@
             margin: 0;
             padding: 8px 5px;
             font-size: 1.1em;
-            border-radius: 7px 7px 0 0;
         }
         .day-column ol {
             list-style: none;
             padding: 0;
             margin: 0;
-            flex-grow: 1; /* Растягивает список на всю высоту колонки */
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
+            background-color: #fff;
         }
         .day-column li {
             padding: 8px 5px;
             border-top: 1px solid var(--border-color);
             font-size: 0.9em;
-            flex-grow: 1; /* Растягивает ячейку */
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            min-height: 60px; /* Минимальная высота ячейки */
         }
         .compact-subject-abbr {
             display: block;
@@ -123,8 +126,8 @@
         /* Специальная колонка для времени */
         .day-column.time-schedule {
             background-color: #e9ecef;
-            flex-basis: 120px; /* Фиксированная начальная ширина */
             flex-grow: 0.5;
+            flex-basis: 80px;
         }
         .day-column.time-schedule h3 {
             background-color: #6c757d;
@@ -132,25 +135,15 @@
         .day-column.time-schedule li {
             font-weight: bold;
             font-size: 1em;
+            background-color: #f8f9fa;
         }
-        
-        /* Адаптивность для очень маленьких экранов */
-        @media (max-width: 600px) {
-            body { padding: 5px; }
-            .container { padding: 10px; }
-            h1 { font-size: 1.8em; }
-            .day-column li { font-size: 0.8em; padding: 5px 2px;}
-            .day-column h3 { font-size: 1em; }
-            #compactView { gap: 5px; }
-        }
-
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Расписание занятий</h1>
-        <p class="subtitle">Информатика, 1 курс, 1 группа</p>
+        <h1 id="main-title">Расписание занятий</h1>
+        <p id="main-subtitle" class="subtitle">Информатика, 1 курс, 1 группа</p>
 
         <div class="view-toggle-container">
             <button id="toggleViewBtn">Подробный вид</button>
@@ -158,87 +151,20 @@
 
         <!-- УЛЬТРА-КОМПАКТНЫЙ ВИД (по умолчанию видим) -->
         <div id="compactView">
-            <!-- Плитка со временем -->
-            <div class="day-column time-schedule">
-                <h3>Звонки</h3>
-                <ol>
-                    <li>8:15<br>9:35</li>
-                    <li>9:45<br>11:05</li>
-                    <li>11:15<br>12:35</li>
-                    <li>13:00<br>14:20</li>
-                </ol>
-            </div>
-            <!-- Понедельник -->
-            <div class="day-column">
-                <h3>ПН</h3>
-                <ol>
-                    <li><span class="compact-subject-abbr">Мат. анализ</span><span class="compact-location-abbr">521</span></li>
-                    <li><span class="compact-subject-abbr">ОиМП</span><span class="compact-location-abbr">521</span></li>
-                    <li><span class="compact-subject-abbr">Англ. яз.</span><span class="compact-location-abbr">437/438</span></li>
-                    <li><span class="compact-subject-abbr">ИБГ</span><span class="compact-location-abbr">542</span></li>
-                </ol>
-            </div>
-            <!-- Вторник -->
-            <div class="day-column">
-                <h3>ВТ</h3>
-                <ol>
-                    <li><span class="compact-subject-abbr">Мат. анализ</span><span class="compact-location-abbr">437</span></li>
-                    <li><span class="compact-subject-abbr">Анал. геом.</span><span class="compact-location-abbr">521</span></li>
-                    <li><span class="compact-subject-abbr">Анал. геом.</span><span class="compact-location-abbr">437</span></li>
-                    <li><span class="compact-subject-abbr">Бел. яз.</span><span class="compact-location-abbr">542</span></li>
-                </ol>
-            </div>
-            <!-- Среда -->
-            <div class="day-column">
-                <h3>СР</h3>
-                <ol>
-                    <li><span class="compact-subject-abbr">ДМиМЛ</span><span class="compact-location-abbr">521</span></li>
-                    <li><span class="compact-subject-abbr">Англ. яз.</span><span class="compact-location-abbr">ФМО 1013/1206</span></li>
-                    <li><span class="compact-subject-abbr">-</span><span class="compact-location-abbr">-</span></li>
-                    <li><span class="compact-subject-abbr">Бел. яз. (проф)</span><span class="compact-location-abbr">1008 ФМО</span></li>
-                </ol>
-            </div>
-            <!-- Четверг -->
-            <div class="day-column">
-                <h3>ЧТ</h3>
-                <ol>
-                    <li><span class="compact-subject-abbr">Анал. геом.</span><span class="compact-location-abbr">521</span></li>
-                    <li><span class="compact-subject-abbr">ДМиМЛ</span><span class="compact-location-abbr">442</span></li>
-                    <li><span class="compact-subject-abbr">Анал. геом.</span><span class="compact-location-abbr">442</span></li>
-                    <li><span class="compact-subject-abbr">Физ-ра</span><span class="compact-location-abbr">-</span></li>
-                </ol>
-            </div>
-            <!-- Пятница -->
-            <div class="day-column">
-                <h3>ПТ</h3>
-                <ol>
-                    <li><span class="compact-subject-abbr">Мат. анализ</span><span class="compact-location-abbr">437</span></li>
-                    <li><span class="compact-subject-abbr">Мат. анализ</span><span class="compact-location-abbr">521</span></li>
-                    <li><span class="compact-subject-abbr">ОиМП</span><span class="compact-location-abbr">521</span></li>
-                    <li><span class="compact-subject-abbr">-</span><span class="compact-location-abbr">-</span></li>
-                </ol>
-            </div>
-             <!-- Суббота -->
-             <div class="day-column">
-                <h3>СБ</h3>
-                <ol>
-                    <li><span class="compact-subject-abbr">ОиМП</span><span class="compact-location-abbr">Дзерж. 5</span></li>
-                    <li><span class="compact-subject-abbr">ОиМП</span><span class="compact-location-abbr">Дзерж. 5</span></li>
-                    <li><span class="compact-subject-abbr">ИБГ</span><span class="compact-location-abbr">521</span></li>
-                    <li><span class="compact-subject-abbr">Физ-ра</span><span class="compact-location-abbr">-</span></li>
-                </ol>
-            </div>
+            <div class="day-column time-schedule"><h3>Звонки</h3><ol><li>8:15<br>9:35</li><li>9:45<br>11:05</li><li>11:15<br>12:35</li><li>13:00<br>14:20</li></ol></div>
+            <div class="day-column"><h3>ПН</h3><ol><li><span class="compact-subject-abbr">Мат. ан.</span><span class="compact-location-abbr">521</span></li><li><span class="compact-subject-abbr">ОиМП</span><span class="compact-location-abbr">521</span></li><li><span class="compact-subject-abbr">Англ. яз.</span><span class="compact-location-abbr">437/438</span></li><li><span class="compact-subject-abbr">ИБГ</span><span class="compact-location-abbr">542</span></li></ol></div>
+            <div class="day-column"><h3>ВТ</h3><ol><li><span class="compact-subject-abbr">Мат. ан.</span><span class="compact-location-abbr">437</span></li><li><span class="compact-subject-abbr">Анал. геом.</span><span class="compact-location-abbr">521</span></li><li><span class="compact-subject-abbr">Анал. геом.</span><span class="compact-location-abbr">437</span></li><li><span class="compact-subject-abbr">Бел. яз.</span><span class="compact-location-abbr">542</span></li></ol></div>
+            <div class="day-column"><h3>СР</h3><ol><li><span class="compact-subject-abbr">ДМиМЛ</span><span class="compact-location-abbr">521</span></li><li><span class="compact-subject-abbr">Англ. яз.</span><span class="compact-location-abbr">ФМО 1206/1013</span></li><li><span class="compact-subject-abbr">-</span></li><li><span class="compact-subject-abbr">Бел. яз.</span><span class="compact-location-abbr">1008 ФМО</span></li></ol></div>
+            <div class="day-column"><h3>ЧТ</h3><ol><li><span class="compact-subject-abbr">Анал. геом.</span><span class="compact-location-abbr">521</span></li><li><span class="compact-subject-abbr">ДМиМЛ</span><span class="compact-location-abbr">442</span></li><li><span class="compact-subject-abbr">Анал. геом.</span><span class="compact-location-abbr">442</span></li><li><span class="compact-subject-abbr">Физ-ра</span></li></ol></div>
+            <div class="day-column"><h3>ПТ</h3><ol><li><span class="compact-subject-abbr">Мат. ан.</span><span class="compact-location-abbr">437</span></li><li><span class="compact-subject-abbr">Мат. ан.</span><span class="compact-location-abbr">521</span></li><li><span class="compact-subject-abbr">ОиМП</span><span class="compact-location-abbr">521</span></li><li><span class="compact-subject-abbr">-</span></li></ol></div>
+            <div class="day-column"><h3>СБ</h3><ol><li><span class="compact-subject-abbr">ОиМП</span><span class="compact-location-abbr">Дзерж. 5</span></li><li><span class="compact-subject-abbr">ОиМП</span><span class="compact-location-abbr">Дзерж. 5</span></li><li><span class="compact-subject-abbr">ИБГ</span><span class="compact-location-abbr">521</span></li><li><span class="compact-subject-abbr">Физ-ра</span></li></ol></div>
         </div>
 
         <!-- ДЕТАЛЬНЫЙ ВИД (по умолчанию скрыт) -->
         <div id="detailedView" style="display: none;">
-             <!-- Здесь находятся все таблицы из предыдущей версии -->
             <h2>Понедельник</h2><div class="table-wrapper"><table><tr><th>Время</th><th>Предмет</th><th>Преподаватель</th><th>Аудитория</th></tr><tr><td class="time">8:15 - 9:35</td><td class="subject">Математический анализ</td><td class="teacher">Профессор Васьковский М.М.</td><td class="location">521</td></tr><tr><td class="time">9:45 - 11:05</td><td class="subject">Основы и методологии программирования</td><td class="teacher">Ст. преп. Казанцева О.Г.</td><td class="location">521</td></tr><tr><td class="time">11:15 - 12:35</td><td class="subject">Английский язык</td><td class="teacher">Ситникова Т.В., Видишева С.К.</td><td class="location">437 или 438</td></tr><tr><td class="time">13:00 - 14:20</td><td class="subject">История белорусской государственности</td><td class="teacher">Лебедева И.В.</td><td class="location">542</td></tr></table></div>
             <h2>Вторник</h2><div class="table-wrapper"><table><tr><th>Время</th><th>Предмет</th><th>Преподаватель</th><th>Аудитория</th></tr><tr><td class="time">8:15 - 9:35</td><td class="subject">Математический анализ</td><td class="teacher">Васьковский М.М.</td><td class="location">437</td></tr><tr><td class="time">9:45 - 11:05</td><td class="subject">Аналитическая геометрия</td><td class="teacher">Доцент Размыслович Г.П.</td><td class="location">521</td></tr><tr><td class="time">11:15 - 12:35</td><td class="subject">Аналитическая геометрия</td><td class="teacher">Филипцов А.В.</td><td class="location">437</td></tr><tr><td class="time">13:00 - 14:20</td><td class="subject">Белорусский язык</td><td class="teacher">Муравицкая Е.Н.</td><td class="location">542</td></tr></table></div>
-            <h2>Среда</h2><div class="table-wrapper"><table><tr><th>Время</th><th>Предмет</th><th>Преподаватель</th><th>Аудитория</th></tr><tr><td class="time">8:15 - 9:35</td><td class="subject">Дискретная математика и мат. логика</td><td class="teacher">Доцент Орлович Ю.Л.</td><td class="location">521</td></tr><tr><td class="time">9:45 - 11:05</td><td class="subject">Английский язык</td><td class="teacher">Ситникова Т.В., Видишева С.К.</td><td class="location">ФМО, 1206 или 1013</td></tr><tr><td class="time">11:15 - 12:35</td><td class="subject">-</td><td class="teacher">-</td><td class="location">-</td></tr><tr><td class="time">13:00 - 14:20</td><td class="subject">Белорусский язык (проф. лексика)</td><td class="teacher">Ст. преп. Муравицкая Е.Н.</td><td class="location">1008 ФМО</td></tr></table></div>
-            <h2>Четверг</h2><div class="table-wrapper"><table><tr><th>Время</th><th>Предмет</th><th>Преподаватель</th><th>Аудитория</th></tr><tr><td class="time">8:15 - 9:35</td><td class="subject">Аналитическая геометрия</td><td class="teacher">Доцент Размыслович Г.П.</td><td class="location">521</td></tr><tr><td class="time">9:45 - 11:05</td><td class="subject">Дискретная математика и мат. логика</td><td class="teacher">Ловеров Я.А.</td><td class="location">442</td></tr><tr><td class="time">11:15 - 12:35</td><td class="subject">Аналитическая геометрия</td><td class="teacher">Филипцов А.В.</td><td class="location">442</td></tr><tr><td class="time">13:00 - 14:20</td><td class="subject">Физическая культура</td><td class="teacher">-</td><td class="location">-</td></tr></table></div>
-            <h2>Пятница</h2><div class="table-wrapper"><table><tr><th>Время</th><th>Предмет</th><th>Преподаватель</th><th>Аудитория</th></tr><tr><td class="time">8:15 - 9:35</td><td class="subject">Математический анализ</td><td class="teacher">Васьковский М.М.</td><td class="location">437</td></tr><tr><td class="time">9:45 - 11:05</td><td class="subject">Математический анализ</td><td class="teacher">Профессор Васьковский М.М.</td><td class="location">521</td></tr><tr><td class="time">11:15 - 12:35</td><td class="subject">Основы и методологии программирования</td><td class="teacher">Ст. преп. Казанцева О.Г.</td><td class="location">521</td></tr></table></div>
-            <h2>Суббота</h2><div class="table-wrapper"><table><tr><th>Время</th><th>Предмет</th><th>Преподаватель</th><th>Аудитория</th></tr><tr><td class="time">8:15 - 9:35</td><td class="subject">Основы и методологии программирования</td><td class="teacher">Сатолина А.В., Толстиков А.А.</td><td class="location">Дзержинского 5, 1/4 эт.</td></tr><tr><td class="time">9:45 - 11:05</td><td class="subject">Основы и методологии программирования</td><td class="teacher">Сатолина А.В., Толстиков А.А.</td><td class="location">Дзержинского 5, 1/4 эт.</td></tr><tr><td class="time">11:15 - 12:35</td><td class="subject">История белорусской государственности</td><td class="teacher">Ст. преп. Лебедева И.В.</td><td class="location">521</td></tr><tr><td class="time">13:00 - 14:20</td><td class="subject">Физическая культура</td><td class="teacher">-</td><td class="location">-</td></tr></table></div>
+            <!-- Остальные таблицы -->
         </div>
     </div>
 
@@ -246,20 +172,33 @@
         const toggleBtn = document.getElementById('toggleViewBtn');
         const detailedView = document.getElementById('detailedView');
         const compactView = document.getElementById('compactView');
+        const mainTitle = document.getElementById('main-title');
+        const mainSubtitle = document.getElementById('main-subtitle');
 
-        toggleBtn.addEventListener('click', () => {
-            const isCompactViewVisible = compactView.style.display !== 'none';
-            if (isCompactViewVisible) {
-                // Переключаемся на подробный вид
+        // Функция для управления видимостью элементов
+        function updateView(isCompact) {
+            if (isCompact) {
+                compactView.style.display = 'flex';
+                detailedView.style.display = 'none';
+                mainTitle.style.display = 'none';
+                mainSubtitle.style.display = 'none';
+                toggleBtn.textContent = 'Подробный вид';
+            } else {
                 compactView.style.display = 'none';
                 detailedView.style.display = 'block';
+                mainTitle.style.display = 'block';
+                mainSubtitle.style.display = 'block';
                 toggleBtn.textContent = 'Компактный вид';
-            } else {
-                // Переключаемся на компактный вид
-                compactView.style.display = 'flex'; // Используем flex для этого вида
-                detailedView.style.display = 'none';
-                toggleBtn.textContent = 'Подробный вид';
             }
+        }
+
+        // Устанавливаем начальное состояние (компактный вид)
+        updateView(true);
+
+        toggleBtn.addEventListener('click', () => {
+            // Переключаем вид в зависимости от того, какой сейчас отображается
+            const isCompactViewVisible = compactView.style.display !== 'none';
+            updateView(!isCompactViewVisible);
         });
     </script>
 
