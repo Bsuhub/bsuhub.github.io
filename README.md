@@ -1,2 +1,3 @@
 # bsuhub.github.io
-Y-group timetable
+My test bsu-utils site
+Now not only Y-group timetable

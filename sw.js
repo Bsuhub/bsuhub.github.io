@@ -5,7 +5,10 @@ const CACHE_NAME = 'schedule-cache-v1';
 const URLS_TO_CACHE = [
   'index.html',
   'WhiteGround.png',
-  'BlackGround.png'
+  'BlackGround.png',
+  'mathan.html',
+  'favicon.png',
+  'laplas.html',
 ];
 
 // 1. Установка Service Worker и кэширование файлов
