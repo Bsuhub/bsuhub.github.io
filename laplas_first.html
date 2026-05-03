@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Теорема Лапласа (Mobile Friendly)</title>
+    
+    <!-- Подключаем MathJax для красивых формул -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6" defer></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
+
+    <style>
+        :root {
+            --bg: #1e1e2e;
+            --card-bg: #313244;
+            --text: #cdd6f4;
+            --accent: #89b4fa;
+            --green: #a6e3a1;
+            --red: #f38ba8;
+            --yellow: #f9e2af;
+            --border: #45475a;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden; /* Убираем гориз. прокрутку */
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            text-align: center;
+            color: var(--accent);
+            margin: 10px 0;
+        }
+
+        /* Контейнер для кнопок */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        button {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1 1 auto; /* Кнопки растягиваются */
+            min-width: 120px;
+            transition: transform 0.1s;
+        }
+        button:active { transform: scale(0.96); }
+        .btn-gen { background: var(--accent); color: #1e1e2e; }
+        .btn-start { background: var(--green); color: #1e1e2e; }
+        .btn-next { background: var(--yellow); color: #1e1e2e; }
+        .btn-reset { background: var(--red); color: #1e1e2e; }
+        button:disabled { opacity: 0.5; filter: grayscale(1); }
+
+        /* Основной контейнер */
+        .main-layout {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* Секция матрицы */
+        .matrix-section {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            background: var(--card-bg);
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .row-selectors {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-right: 8px;
+            padding-top: 5px;
+        }
+
+        .row-checkbox {
+            width: 30px; 
+            height: 30px; /* Высота подстраивается под ячейку */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #45475a;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .row-checkbox.selected { background: var(--yellow); color: #1e1e2e; font-weight: bold; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+        }
+
+        .cell {
+            width: 40px; 
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1e1e2e;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 16px;
+            position: relative;
+        }
+        
+        /* Адаптив для маленьких экранов */
+        @media (max-width: 450px) {
+            .cell { width: 13vw; height: 13vw; font-size: 14px; max-width: 45px; max-height: 45px; }
+            .row-checkbox { height: 13vw; width: 25px; max-height: 45px; font-size: 10px; }
+            .matrix-section { width: 100%; justify-content: center; }
+        }
+
+        /* Состояния ячеек */
+        .cell.in-row { background: rgba(249, 226, 175, 0.2); border-color: var(--yellow); }
+        .cell.in-col { background: rgba(166, 227, 161, 0.2); border-color: var(--green); }
+        .cell.intersection { 
+            background: var(--red); 
+            color: #1e1e2e; 
+            font-weight: bold; 
+            z-index: 2;
+        }
+        .cell.complement {
+            background: #cba6f7;
+            color: #1e1e2e;
+            opacity: 0.8;
+        }
+
+        /* Информационная панель */
+        .info-panel {
+            flex: 1;
+            min-width: 300px;
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .status-text { font-size: 0.95rem; line-height: 1.4; }
+
+        /* Блок с формулой */
+        .formula-container {
+            background: #11111b;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Детали шага (миноры) */
+        .step-viz {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            background: #252635;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .mini-matrices-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .mini-matrix {
+            display: grid;
+            gap: 2px;
+            background: #fff;
+            padding: 2px;
+            border-radius: 2px;
+        }
+        .mini-cell {
+            width: 25px; height: 25px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px;
+            color: #000;
+            font-weight: bold;
+        }
+        .mini-label { font-size: 12px; text-align: center; margin-bottom: 4px; color: #aaa; }
+
+    </style>
+</head>
+<body>
+
+    <h1>Обобщенная Теорема Лапласа</h1>
+
+    <div class="controls">
+        <button class="btn-gen" onclick="generateMatrix()">🎲 Новая матрица</button>
+        <button class="btn-start" id="btnStart" onclick="startAlgorithm()">🚀 Начать</button>
+        <button class="btn-next" id="btnNext" onclick="nextStep()" disabled>Далее</button>
+        <button class="btn-reset" onclick="reset()">↺ Сброс</button>
+    </div>
+
+    <div class="main-layout">
+        <!-- Секция Матрицы -->
+        <div class="matrix-section">
+            <div class="row-selectors" id="rowSelectors"></div>
+            <div class="grid" id="matrixGrid"></div>
+        </div>
+
+        <!-- Секция Инфо -->
+        <div class="info-panel">
+            <div class="status-text" id="statusText">
+                1. Выберите строки, нажав на номера слева.<br>
+                2. Нажмите "Начать".
+            </div>
+
+            <!-- Основная формула -->
+            <div>
+                <small style="color:#aaa">Общая формула:</small>
+                <div class="formula-container" id="mainFormula">
+                    $$ \det(A) = \dots $$
+                </div>
+            </div>
+
+            <!-- Детали текущего шага -->
+            <div class="step-viz" id="stepViz">
+                <div style="text-align: center; font-size: 0.9rem;">Текущее слагаемое:</div>
+                
+                <!-- Формула конкретного шага -->
+                <div id="stepFormula" style="text-align: center; margin: 10px 0;"></div>
+
+                <div class="mini-matrices-row">
+                    <div>
+                        <div class="mini-label" style="color:var(--red)">Минор M</div>
+                        <div id="minorViz"></div>
+                    </div>
+                    <div style="font-size: 20px;">×</div>
+                    <div>
+                        <div class="mini-label" style="color:#cba6f7">Дополнение M*</div>
+                        <div id="compViz"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const N = 5;
+        let matrix = [];
+        let selectedRows = [];
+        let combinations = [];
+        let currentStepIndex = 0;
+        let isRunning = false;
+        let formulaLatex = ""; // Строка для накопления LaTeX формулы
+
+        // --- Инициализация ---
+        window.onload = () => {
+            createGrid();
+            generateMatrix();
+        };
+
+        function createGrid() {
+            const grid = document.getElementById('matrixGrid');
+            const selectors = document.getElementById('rowSelectors');
+            grid.innerHTML = '';
+            selectors.innerHTML = '';
+
+            for (let i = 0; i < N; i++) {
+                // Чекбокс строки
+                const sel = document.createElement('div');
+                sel.className = 'row-checkbox';
+                sel.innerText = i + 1;
+                sel.id = `row-sel-${i}`;
+                sel.onclick = () => toggleRow(i);
+                selectors.appendChild(sel);
+
+                // Ячейки
+                for (let j = 0; j < N; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.id = `cell-${i}-${j}`;
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        function generateMatrix() {
+            if (isRunning) reset();
+            matrix = [];
+            for (let i = 0; i < N; i++) {
+                const row = [];
+                for (let j = 0; j < N; j++) {
+                    // Генерируем числа от -9 до 9
+                    const val = Math.floor(Math.random() * 19) - 9;
+                    row.push(val);
+                    const cell = document.getElementById(`cell-${i}-${j}`);
+                    cell.innerText = val;
+                    cell.className = 'cell'; // сброс стилей
+                }
+                matrix.push(row);
+            }
+            // Если строки были выбраны, подсвечиваем их заново
+            updateRowHighlights();
+        }
+
+        // --- Логика выбора строк ---
+        function toggleRow(rowIndex) {
+            if (isRunning) return;
+            const idx = selectedRows.indexOf(rowIndex);
+            if (idx === -1) selectedRows.push(rowIndex);
+            else selectedRows.splice(idx, 1);
+            
+            selectedRows.sort((a, b) => a - b);
+            updateRowHighlights();
+        }
+
+        function updateRowHighlights() {
+            // Сброс визуализации
+            document.querySelectorAll('.row-checkbox').forEach(el => el.classList.remove('selected'));
+            document.querySelectorAll('.cell').forEach(el => el.classList.remove('in-row'));
+
+            selectedRows.forEach(r => {
+                document.getElementById(`row-sel-${r}`).classList.add('selected');
+                for(let c=0; c<N; c++) {
+                    document.getElementById(`cell-${r}-${c}`).classList.add('in-row');
+                }
+            });
+
+            const status = document.getElementById('statusText');
+            if (selectedRows.length === 0) status.innerText = "Выберите строки слева.";
+            else status.innerHTML = `Выбрано строк: <b>${selectedRows.length}</b>. Готов к расчету.`;
+        }
+
+        // --- Алгоритм Лапласа ---
+
+        // Генерация сочетаний C(n, k)
+        function getCombinations(n, k) {
+            let result = [];
+            function backtrack(start, current) {
+                if (current.length === k) {
+                    result.push([...current]);
+                    return;
+                }
+                for (let i = start; i < n; i++) {
+                    current.push(i);
+                    backtrack(i + 1, current);
+                    current.pop();
+                }
+            }
+            backtrack(0, []);
+            return result;
+        }
+
+        function startAlgorithm() {
+            if (selectedRows.length === 0 || selectedRows.length === N) {
+                alert("Выберите от 1 до 4 строк.");
+                return;
+            }
+
+            isRunning = true;
+            currentStepIndex = 0;
+            combinations = getCombinations(N, selectedRows.length);
+            formulaLatex = ""; // Сброс формулы
+
+            // UI обновления
+            document.getElementById('btnStart').disabled = true;
+            document.getElementById('btnNext').disabled = false;
+            document.getElementById('statusText').innerHTML = `Всего комбинаций столбцов: <b>${combinations.length}</b>. Ищем миноры...`;
+            document.getElementById('stepViz').style.display = 'flex';
+            
+            // Начинаем формулу
+            updateMainFormula(`\\det(A) = \\sum (-1)^{i+j} M M^*`);
+            
+            // Первый шаг сразу или по клику? Давайте по клику для наглядности
+            document.getElementById('btnNext').innerText = "Показать 1-й шаг";
+        }
+
+        function reset() {
+            isRunning = false;
+            selectedRows = [];
+            updateRowHighlights();
+            document.getElementById('btnStart').disabled = false;
+            document.getElementById('btnNext').disabled = true;
+            document.getElementById('btnNext').innerText = "Далее";
+            document.getElementById('stepViz').style.display = 'none';
+            document.querySelectorAll('.cell').forEach(c => c.className = 'cell');
+            updateMainFormula("\\det(A) = \\dots");
+            document.getElementById('btnNext').classList.remove('btn-gen'); // убрать зеленый цвет финиша
+        }
+
+        function nextStep() {
+            if (currentStepIndex >= combinations.length) {
+                document.getElementById('btnNext').disabled = true;
+                document.getElementById('btnNext').innerText = "Готово";
+                document.getElementById('statusText').innerHTML = "<b>Разложение завершено!</b>";
+                return;
+            }
+
+            const cols = combinations[currentStepIndex];
+            
+            // 1. Подсветка на матрице
+            highlightMatrix(cols);
+
+            // 2. Вычисления знака
+            // Сумма индексов (1-based)
+            const sumRows = selectedRows.reduce((a, b) => a + (b + 1), 0);
+            const sumCols = cols.reduce((a, b) => a + (b + 1), 0);
+            const power = sumRows + sumCols;
+            const signChar = (power % 2 === 0) ? "+" : "-";
+            const signVal = (power % 2 === 0) ? 1 : -1;
+
+            // 3. Формирование LaTeX для текущего шага
+            // M_{строки, столбцы}
+            const rowsStr = selectedRows.map(r=>r+1).join('');
+            const colsStr = cols.map(c=>c+1).join('');
+            
+            // Добавляем к общей формуле
+            if (currentStepIndex === 0) {
+                formulaLatex = (signChar === "-" ? "-" : "") + ` |M_{${colsStr}}| \\cdot |M^*_{${colsStr}}|`;
+            } else {
+                formulaLatex += ` ${signChar} |M_{${colsStr}}| \\cdot |M^*_{${colsStr}}|`;
+            }
+            updateMainFormula(`\\det(A) = ${formulaLatex}`);
+
+            // Отображение формулы конкретного шага (подробно)
+            const stepMath = `(-1)^{${sumRows}+${sumCols}} \\cdot M_{${colsStr}} \\cdot M^*_{${colsStr}} \\Rightarrow \\mathbf{${signChar}1}`;
+            renderMathInElement('stepFormula', stepMath);
+
+            // 4. Визуализация мини-матриц
+            drawMiniMatrices(cols);
+
+            currentStepIndex++;
+            
+            // Обновление кнопки
+            if (currentStepIndex >= combinations.length) {
+                document.getElementById('btnNext').innerText = "Завершить";
+                document.getElementById('btnNext').classList.add('btn-gen');
+            } else {
+                document.getElementById('btnNext').innerText = `Шаг ${currentStepIndex+1}`;
+            }
+        }
+
+        // --- Вспомогательные функции ---
+
+        function highlightMatrix(cols) {
+            // Сбрасываем цвета, но оставляем выделение строк
+            for(let r=0; r<N; r++){
+                for(let c=0; c<N; c++){
+                    const cell = document.getElementById(`cell-${r}-${c}`);
+                    cell.className = 'cell'; // reset
+                    
+                    const inRow = selectedRows.includes(r);
+                    const inCol = cols.includes(c);
+
+                    if (inRow && inCol) cell.classList.add('intersection');
+                    else if (inRow) cell.classList.add('in-row');
+                    else if (inCol) cell.classList.add('in-col');
+                    else cell.classList.add('complement');
+                }
+            }
+        }
+
+        function drawMiniMatrices(cols) {
+            // Минор (пересечение)
+            drawMiniGrid('minorViz', selectedRows, cols, '#f38ba8');
+
+            // Дополнение (остаток)
+            const remRows = [];
+            const remCols = [];
+            for(let i=0; i<N; i++) {
+                if(!selectedRows.includes(i)) remRows.push(i);
+                if(!cols.includes(i)) remCols.push(i);
+            }
+            drawMiniGrid('compViz', remRows, remCols, '#cba6f7');
+        }
+
+        function drawMiniGrid(containerId, rows, cols, color) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            const grid = document.createElement('div');
+            grid.className = 'mini-matrix';
+            // Grid template based on dimension
+            grid.style.gridTemplateColumns = `repeat(${cols.length}, 1fr)`;
+            grid.style.background = color;
+
+            rows.forEach(r => {
+                cols.forEach(c => {
+                    const d = document.createElement('div');
+                    d.className = 'mini-cell';
+                    d.innerText = matrix[r][c];
+                    grid.appendChild(d);
+                });
+            });
+            container.appendChild(grid);
+        }
+
+        // Обновление MathJax
+        function updateMainFormula(latex) {
+            const el = document.getElementById('mainFormula');
+            el.innerHTML = `$$ ${latex} $$`;
+            MathJax.typesetPromise([el]).catch((err) => console.log(err));
+        }
+
+        function renderMathInElement(id, latex) {
+            const el = document.getElementById(id);
+            el.innerHTML = `$$ ${latex} $$`;
+            MathJax.typesetPromise([el]).catch((err) => console.log(err));
+        }
+
+    </script>
+</body>
+</html>

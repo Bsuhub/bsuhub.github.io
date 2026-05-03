@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расписание занятий - 1 курс, 1 группа</title>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --border-color: #ddd;
+            --bg-light: #f8f9fa;
+            --text-secondary: #555;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.5;
+            margin: 0;
+            padding: 10px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.07);
+        }
+        
+        /* --- Стили для заголовков --- */
+        #main-title { color: var(--primary-color); text-align: center; font-size: 2.2em; margin-bottom: 10px; }
+        #main-subtitle { text-align: center; font-size: 1.2em; color: var(--text-secondary); margin-bottom: 20px; }
+        #compact-header {
+            text-align: center; 
+            font-size: 0.9em; 
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        /* --- Кнопка переключения --- */
+        .view-toggle-container {
+            text-align: center;
+            margin: 0 0 20px 0;
+        }
+        #toggleViewBtn {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        #toggleViewBtn.default-mode-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        #toggleViewBtn.compact-mode-btn {
+            background-color: transparent;
+            color: var(--primary-color);
+        }
+        #toggleViewBtn:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* --- ДЕТАЛЬНЫЙ ВИД (ТАБЛИЦЫ) --- */
+        #detailedView h2 { font-size: 1.8em; color: var(--primary-color); text-align: center; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-top: 20px; }
+        .table-wrapper { overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        th { background-color: var(--primary-color); color: white; }
+        .time { font-weight: bold; }
+        .subject { font-weight: bold; }
+        .teacher { color: #666; font-style: italic; }
+        .location { font-weight: bold; color: #007bff; }
+        
+        /* --- УЛЬТРА-КОМПАКТНЫЙ ВИД С ПЕРЕНОСОМ --- */
+        #compactView {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+        .day-column {
+            flex-grow: 1; flex-basis: 90px; display: flex; flex-direction: column; border: 1px solid var(--border-color); border-radius: 8px; text-align: center; overflow: hidden;
+        }
+        .day-column h3 {
+            background-color: var(--primary-color); color: white; margin: 0; padding: 8px 5px; font-size: 1.1em;
+        }
+        .day-column ol {
+            list-style: none; padding: 0; margin: 0; flex-grow: 1; display: flex; flex-direction: column; background-color: #fff;
+        }
+        .day-column li {
+            padding: 8px 5px; border-top: 1px solid var(--border-color); font-size: 0.9em; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; min-height: 60px;
+        }
+        .compact-subject-abbr { display: block; font-weight: bold; }
+        .compact-location-abbr { color: #007bff; font-size: 0.9em; }
+        .day-column.time-schedule { background-color: #e9ecef; flex-grow: 0.5; flex-basis: 80px; }
+        .day-column.time-schedule h3 { background-color: #6c757d; }
+        .day-column.time-schedule li { font-weight: bold; font-size: 1em; background-color: #f8f9fa; }
+
+        @media (max-width: 600px) {
+            .day-column li {
+                min-height: 55px; padding: 6px 3px; font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 id="main-title">Расписание занятий</h1>
+        <p id="main-subtitle" class="subtitle">Информатика, 1 курс, 1 группа</p>
+        <p id="compact-header">Расписание: 1 группа, 1 поток</p>
+
+        <div class="view-toggle-container">
+            <button id="toggleViewBtn">Подробный вид</button>
+        </div>
+
+        <!-- УЛЬТРА-КОМПАКТНЫЙ ВИД -->
+        <div id="compactView">
+            <div class="day-column time-schedule"><h3>Звонки</h3><ol><li>8:15<br>9:35</li><li>9:45<br>11:05</li><li>11:15<br>12:35</li><li>13:00<br>14:20</li></ol></div>
+            <div class="day-column"><h3>ПН</h3><ol><li><span class="compact-subject-abbr">Мат. ан.</span><span class="compact-location-abbr">521</span></li><li><span class="compact-subject-abbr">ОиМП</span><span class="compact-location-abbr">521</span></li><li><span class="compact-subject-abbr">Англ. яз.</span><span class="compact-location-abbr">437/438</span></li><li><span class="compact-subject-abbr">ИБГ</span><span class="compact-location-abbr">542</span></li></ol></div>
+            <div class="day-column"><h3>ВТ</h3><ol><li><span class="compact-subject-abbr">Мат. ан.</span><span class="compact-location-abbr">437</span></li><li><span class="compact-subject-abbr">Анал. геом.</span><span class="compact-location-abbr">521</span></li><li><span class="compact-subject-abbr">Анал. геом.</span><span class="compact-location-abbr">437</span></li><li><span class="compact-subject-abbr">Бел. яз.</span><span class="compact-location-abbr">542</span></li></ol></div>
+            <div class="day-column"><h3>СР</h3><ol><li><span class="compact-subject-abbr">ДМиМЛ</span><span class="compact-location-abbr">521</span></li><li><span class="compact-subject-abbr">Англ. яз.</span><span class="compact-location-abbr">ФМО 1206/1013</span></li><li><span class="compact-subject-abbr">-</span></li><li><span class="compact-subject-abbr">Бел. яз.</span><span class="compact-location-abbr">1008 ФМО</span></li></ol></div>
+            <div class="day-column"><h3>ЧТ</h3><ol><li><span class="compact-subject-abbr">Анал. геом.</span><span class="compact-location-abbr">521</span></li><li><span class="compact-subject-abbr">ДМиМЛ</span><span class="compact-location-abbr">442</span></li><li><span class="compact-subject-abbr">Анал. геом.</span><span class="compact-location-abbr">442</span></li><li><span class="compact-subject-abbr">Физ-ра</span></li></ol></div>
+            <div class="day-column"><h3>ПТ</h3><ol><li><span class="compact-subject-abbr">Мат. ан.</span><span class="compact-location-abbr">437</span></li><li><span class="compact-subject-abbr">Мат. ан.</span><span class="compact-location-abbr">521</span></li><li><span class="compact-subject-abbr">ОиМП</span><span class="compact-location-abbr">521</span></li><li><span class="compact-subject-abbr">-</span></li></ol></div>
+            <div class="day-column"><h3>СБ</h3><ol><li><span class="compact-subject-abbr">ОиМП</span><span class="compact-location-abbr">Дзерж. 5</span></li><li><span class="compact-subject-abbr">ОиМП</span><span class="compact-location-abbr">Дзерж. 5</span></li><li><span class="compact-subject-abbr">ИБГ</span><span class="compact-location-abbr">521</span></li><li><span class="compact-subject-abbr">Физ-ра</span></li></ol></div>
+        </div>
+
+        <!-- ДЕТАЛЬНЫЙ ВИД -->
+        <div id="detailedView" style="display: none;">
+            <h2>Понедельник</h2>
+            <div class="table-wrapper"><table><tr><th>Время</th><th>Предмет</th><th>Преподаватель</th><th>Аудитория</th></tr><tr><td class="time">8:15 - 9:35</td><td class="subject">Математический анализ</td><td class="teacher">Профессор Васьковский М.М.</td><td class="location">521</td></tr><tr><td class="time">9:45 - 11:05</td><td class="subject">Основы и методологии программирования</td><td class="teacher">Ст. преп. Казанцева О.Г.</td><td class="location">521</td></tr><tr><td class="time">11:15 - 12:35</td><td class="subject">Английский язык</td><td class="teacher">Ситникова Т.В., Видишева С.К.</td><td class="location">437 или 438</td></tr><tr><td class="time">13:00 - 14:20</td><td class="subject">История белорусской государственности</td><td class="teacher">Лебедева И.В.</td><td class="location">542</td></tr></table></div>
+            
+            <h2>Вторник</h2>
+            <div class="table-wrapper"><table><tr><th>Время</th><th>Предмет</th><th>Преподаватель</th><th>Аудитория</th></tr><tr><td class="time">8:15 - 9:35</td><td class="subject">Математический анализ</td><td class="teacher">Васьковский М.М.</td><td class="location">437</td></tr><tr><td class="time">9:45 - 11:05</td><td class="subject">Аналитическая геометрия</td><td class="teacher">Доцент Размыслович Г.П.</td><td class="location">521</td></tr><tr><td class="time">11:15 - 12:35</td><td class="subject">Аналитическая геометрия</td><td class="teacher">Филипцов А.В.</td><td class="location">437</td></tr><tr><td class="time">13:00 - 14:20</td><td class="subject">Белорусский язык</td><td class="teacher">Муравицкая Е.Н.</td><td class="location">542</td></tr></table></div>
+
+            <h2>Среда</h2>
+            <div class="table-wrapper"><table><tr><th>Время</th><th>Предмет</th><th>Преподаватель</th><th>Аудитория</th></tr><tr><td class="time">8:15 - 9:35</td><td class="subject">Дискретная математика и мат. логика</td><td class="teacher">Доцент Орлович Ю.Л.</td><td class="location">521</td></tr><tr><td class="time">9:45 - 11:05</td><td class="subject">Английский язык</td><td class="teacher">Ситникова Т.В., Видишева С.К.</td><td class="location">ФМО, 1206 или 1013</td></tr><tr><td class="time">11:15 - 12:35</td><td class="subject">-</td><td class="teacher">-</td><td class="location">-</td></tr><tr><td class="time">13:00 - 14:20</td><td class="subject">Белорусский язык (проф. лексика)</td><td class="teacher">Ст. преп. Муравицкая Е.Н.</td><td class="location">1008 ФМО</td></tr></table></div>
+            
+            <h2>Четверг</h2>
+            <div class="table-wrapper"><table><tr><th>Время</th><th>Предмет</th><th>Преподаватель</th><th>Аудитория</th></tr><tr><td class="time">8:15 - 9:35</td><td class="subject">Аналитическая геометрия</td><td class="teacher">Доцент Размыслович Г.П.</td><td class="location">521</td></tr><tr><td class="time">9:45 - 11:05</td><td class="subject">Дискретная математика и мат. логика</td><td class="teacher">Ловеров Я.А.</td><td class="location">442</td></tr><tr><td class="time">11:15 - 12:35</td><td class="subject">Аналитическая геометрия</td><td class="teacher">Филипцов А.В.</td><td class="location">442</td></tr><tr><td class="time">13:00 - 14:20</td><td class="subject">Физическая культура</td><td class="teacher">-</td><td class="location">-</td></tr></table></div>
+
+            <h2>Пятница</h2>
+            <div class="table-wrapper"><table><tr><th>Время</th><th>Предмет</th><th>Преподаватель</th><th>Аудитория</th></tr><tr><td class="time">8:15 - 9:35</td><td class="subject">Математический анализ</td><td class="teacher">Васьковский М.М.</td><td class="location">437</td></tr><tr><td class="time">9:45 - 11:05</td><td class="subject">Математический анализ</td><td class="teacher">Профессор Васьковский М.М.</td><td class="location">521</td></tr><tr><td class="time">11:15 - 12:35</td><td class="subject">Основы и методологии программирования</td><td class="teacher">Ст. преп. Казанцева О.Г.</td><td class="location">521</td></tr></table></div>
+
+            <h2>Суббота</h2>
+            <div class="table-wrapper"><table><tr><th>Время</th><th>Предмет</th><th>Преподаватель</th><th>Аудитория</th></tr><tr><td class="time">8:15 - 9:35</td><td class="subject">Основы и методологии программирования</td><td class="teacher">Сатолина А.В., Толстиков А.А.</td><td class="location">Дзержинского 5, 1/4 эт.</td></tr><tr><td class="time">9:45 - 11:05</td><td class="subject">Основы и методологии программирования</td><td class="teacher">Сатолина А.В., Толстиков А.А.</td><td class="location">Дзержинского 5, 1/4 эт.</td></tr><tr><td class="time">11:15 - 12:35</td><td class="subject">История белорусской государственности</td><td class="teacher">Ст. преп. Лебедева И.В.</td><td class="location">521</td></tr><tr><td class="time">13:00 - 14:20</td><td class="subject">Физическая культура</td><td class="teacher">-</td><td class="location">-</td></tr></table></div>
+        </div>
+    </div>
+
+    <script>
+        const toggleBtn = document.getElementById('toggleViewBtn');
+        const detailedView = document.getElementById('detailedView');
+        const compactView = document.getElementById('compactView');
+        const mainTitle = document.getElementById('main-title');
+        const mainSubtitle = document.getElementById('main-subtitle');
+        const compactHeader = document.getElementById('compact-header');
+        const h1 = document.querySelector('h1');
+        let clickTimestamps = [];
+        h1.addEventListener('click', () => { const now = Date.now(); clickTimestamps.push(now); clickTimestamps = clickTimestamps.filter(ts => now - ts < 1000); if (clickTimestamps.length >= 3) {localStorage.setItem('schedule_version', 'latest');  window.location.href = 'index.html';  clickTimestamps = []; } });
+        function updateView(isCompact) {
+            if (isCompact) {
+                compactView.style.display = 'flex';
+                compactHeader.style.display = 'block';
+                detailedView.style.display = 'none';
+                mainTitle.style.display = 'none';
+                mainSubtitle.style.display = 'none';
+                toggleBtn.textContent = 'Перейти к подробному виду';
+                toggleBtn.className = 'compact-mode-btn';
+            } else {
+                detailedView.style.display = 'block';
+                mainTitle.style.display = 'block';
+                mainSubtitle.style.display = 'block';
+                compactView.style.display = 'none';
+                compactHeader.style.display = 'none';
+                toggleBtn.textContent = 'Перейти к компактному виду';
+                toggleBtn.className = 'default-mode-btn';
+            }
+        }
+
+        // Страница по умолчанию загружается в компактном виде
+        updateView(true);
+
+        toggleBtn.addEventListener('click', () => {
+            const isCompactViewVisible = compactView.style.display !== 'none';
+            updateView(!isCompactViewVisible);
+        });
+    </script>
+
+</body>
+
+</html>

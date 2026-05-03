@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Матан Квиз: Формулы</title>
+
+    <!-- Подключаем MathJax -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --bg: #1e1e2e;
+            --card: #313244;
+            --text: #cdd6f4;
+            --accent: #89b4fa;
+            --green: #a6e3a1;
+            --red: #f38ba8;
+            --yellow: #f9e2af;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        h1 {
+            color: var(--accent);
+            margin-bottom: 5px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #a6adc8;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Экраны (Меню, Квиз, Результат) */
+        .screen {
+            width: 100%;
+            max-width: 600px;
+            display: none;
+            /* Скрыто по умолчанию */
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Кнопки меню */
+        .menu-btn {
+            background: var(--card);
+            border: 2px solid var(--accent);
+            color: var(--text);
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, background 0.2s;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-btn:active {
+            transform: scale(0.98);
+        }
+
+        .menu-btn:hover {
+            background: #45475a;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+        }
+
+        /* Интерфейс квиза */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #11111b;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .question-box {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.3rem;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        @media (min-width: 500px) {
+            .options-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .option-btn {
+            background: #45475a;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        /* Состояния ответа */
+        .option-btn.correct {
+            background: var(--green) !important;
+            color: #1e1e2e;
+        }
+
+        .option-btn.wrong {
+            background: var(--red) !important;
+            opacity: 0.6;
+            color: #1e1e2e;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        /* Результат */
+        .result-card {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .score-big {
+            font-size: 3rem;
+            color: var(--accent);
+            margin: 10px 0;
+        }
+
+        .btn-restart {
+            background: var(--accent);
+            color: #1e1e2e;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ЭКРАН МЕНЮ -->
+    <div id="menuScreen" class="screen active">
+        <div>
+            <h1>🧠 Матан Тренажер</h1>
+            <div class="subtitle">Выбери тему для тренировки</div>
+        </div>
+
+        <button class="menu-btn" onclick="startQuiz('trig')">
+            <span>📐 Тригонометрия</span> <span class="icon">➜</span>
+        </button>
+        <button class="menu-btn" onclick="startQuiz('subs')">
+            <span>🔁 Подстановки (Интегралы)</span> <span class="icon">➜</span>
+        </button>
+        <button class="menu-btn" onclick="startQuiz('deriv')">
+            <span>⚡ Производные (Таблица)</span> <span class="icon">➜</span>
+        </button>
+        <button class="menu-btn" onclick="startQuiz('integ')">
+            <span>∫ Интегралы (Таблица)</span> <span class="icon">➜</span>
+        </button>
+        <button class="menu-btn" onclick="startQuiz('limit')">
+            <span>🛑 Пределы (Эквивалентности)</span> <span class="icon">➜</span>
+        </button>
+        <button class="menu-btn" onclick="startQuiz('series')">
+            <span>∑ Ряды (Тейлор)</span> <span class="icon">➜</span>
+        </button>
+
+        <button class="menu-btn" onclick="window.location.href='routing.html'">
+            <span>Домой</span> <span class="icon">➜</span>
+        </button>
+    </div>
+
+    <!-- ЭКРАН КВИЗА -->
+    <div id="quizScreen" class="screen">
+        <div class="quiz-header">
+            <span id="progressText">1 / 10</span>
+            <span style="color:var(--green)">Верно: <span id="scoreText">0</span></span>
+        </div>
+
+        <div class="question-box" id="questionDisplay">
+            <!-- Сюда рендерится вопрос -->
+        </div>
+
+        <div class="options-grid" id="optionsContainer">
+            <!-- Кнопки ответов -->
+        </div>
+
+        <button onclick="toMenu()"
+            style="background:transparent; border:1px solid #666; color:#888; padding:10px; border-radius:5px; cursor:pointer; margin-top:20px;">
+            Выйти в меню
+        </button>
+    </div>
+
+    <!-- ЭКРАН РЕЗУЛЬТАТА -->
+    <div id="resultScreen" class="screen">
+        <div class="result-card">
+            <h2>Тренировка завершена!</h2>
+            <div class="score-big" id="finalScore">8/10</div>
+            <p id="feedbackMsg">Неплохо!</p>
+            <button class="btn-restart" onclick="toMenu()">В меню</button>
+        </div>
+    </div>
+
+    <script>
+        // === БАЗА ДАННЫХ ВОПРОСОВ ===
+        // q: Вопрос (LaTeX)
+        // a: Правильный ответ (LaTeX)
+        // type: Категория
+        const database = [
+            // ==========================================
+            // 📐 ТРИГОНОМЕТРИЯ (Расширенная)
+            // ==========================================
+            // Суммы и разности (База)
+            { type: 'trig', q: '\\sin(\\alpha + \\beta)', a: '\\sin\\alpha\\cos\\beta + \\cos\\alpha\\sin\\beta' },
+            { type: 'trig', q: '\\sin(\\alpha - \\beta)', a: '\\sin\\alpha\\cos\\beta - \\cos\\alpha\\sin\\beta' },
+            { type: 'trig', q: '\\cos(\\alpha + \\beta)', a: '\\cos\\alpha\\cos\\beta - \\sin\\alpha\\sin\\beta' },
+            { type: 'trig', q: '\\cos(\\alpha - \\beta)', a: '\\cos\\alpha\\cos\\beta + \\sin\\alpha\\sin\\beta' },
+            { type: 'trig', q: '\\tan(\\alpha + \\beta)', a: '\\frac{\\tan\\alpha + \\tan\\beta}{1 - \\tan\\alpha\\tan\\beta}' },
+
+            // Двойные и тройные углы
+            { type: 'trig', q: '\\sin 2\\alpha', a: '2\\sin\\alpha\\cos\\alpha' },
+            { type: 'trig', q: '\\cos 2\\alpha', a: '\\cos^2\\alpha - \\sin^2\\alpha' },
+            { type: 'trig', q: '\\sin 3\\alpha', a: '3\\sin\\alpha - 4\\sin^3\\alpha' },
+            { type: 'trig', q: '\\cos 3\\alpha', a: '4\\cos^3\\alpha - 3\\cos\\alpha' },
+
+            // Понижение степени
+            { type: 'trig', q: '\\sin^2\\alpha', a: '\\frac{1 - \\cos 2\\alpha}{2}' },
+            { type: 'trig', q: '\\cos^2\\alpha', a: '\\frac{1 + \\cos 2\\alpha}{2}' },
+            { type: 'trig', q: '\\sin^3\\alpha', a: '\\frac{3\\sin\\alpha - \\sin 3\\alpha}{4}' }, // Полезно для интегралов
+
+            // Сумма в произведение
+            { type: 'trig', q: '\\sin\\alpha + \\sin\\beta', a: '2\\sin\\frac{\\alpha+\\beta}{2}\\cos\\frac{\\alpha-\\beta}{2}' },
+            { type: 'trig', q: '\\cos\\alpha - \\cos\\beta', a: '-2\\sin\\frac{\\alpha+\\beta}{2}\\sin\\frac{\\alpha-\\beta}{2}' },
+
+            // Произведение в сумму (Критически важно для интегралов!)
+            { type: 'trig', q: '\\sin\\alpha \\cos\\beta', a: '\\frac{1}{2}[\\sin(\\alpha-\\beta) + \\sin(\\alpha+\\beta)]' },
+            { type: 'trig', q: '\\cos\\alpha \\cos\\beta', a: '\\frac{1}{2}[\\cos(\\alpha-\\beta) + \\cos(\\alpha+\\beta)]' },
+            { type: 'trig', q: '\\sin\\alpha \\sin\\beta', a: '\\frac{1}{2}[\\cos(\\alpha-\\beta) - \\cos(\\alpha+\\beta)]' },
+
+            // Тангенс половинного угла (для универсальной подстановки)
+            { type: 'trig', q: '\\sin x \\text{ через } t=\\tan(x/2)', a: '\\frac{2t}{1+t^2}' },
+            { type: 'trig', q: '\\cos x \\text{ через } t=\\tan(x/2)', a: '\\frac{1-t^2}{1+t^2}' },
+
+            // ==========================================
+            // 🔁 ПОДСТАНОВКИ (Расширенная)
+            // ==========================================
+            // Классические тригонометрические
+            { type: 'subs', q: '\\int R(\\sin x, \\cos x)dx', a: 't = \\tan\\frac{x}{2} \\; \\text{(универсальная)}' },
+            { type: 'subs', q: '\\int R(\\sin^2 x, \\cos^2 x)dx', a: 't = \\tan x' },
+            { type: 'subs', q: '\\sqrt{a^2 - x^2}', a: 'x = a\\sin t' },
+            { type: 'subs', q: '\\sqrt{x^2 - a^2}', a: 'x = \\frac{a}{\\cos t}' },
+            { type: 'subs', q: '\\sqrt{x^2 + a^2} \\; (Trig)', a: 'x = a\\tan t' },
+
+            // Гиперболические замены (часто удобнее тригонометрических)
+            { type: 'subs', q: '\\sqrt{x^2 + a^2} \\; (Hyp)', a: 'x = a \\; \\text{sh } t' },
+            { type: 'subs', q: '\\sqrt{x^2 - a^2} \\; (Hyp)', a: 'x = a \\; \\text{ch } t' },
+
+            // Специальные
+            { type: 'subs', q: '\\int \\frac{dx}{(1+x^2)^2}', a: 'x = \\tan t' },
+            { type: 'subs', q: '\\int \\sqrt[n]{\\frac{ax+b}{cx+d}} dx', a: 't^n = \\frac{ax+b}{cx+d}' },
+
+            // Дифференциальный бином (Чебышёв) x^m(a+bx^n)^p
+            { type: 'subs', q: 'x^m(a+bx^n)^p, \\; p \\in \\mathbb{Z}', a: 'x = t^k \\text{ (общий знаменатель)}' },
+            { type: 'subs', q: 'x^m(a+bx^n)^p, \\; \\frac{m+1}{n} \\in \\mathbb{Z}', a: 'a+bx^n = t^s' },
+            { type: 'subs', q: 'x^m(a+bx^n)^p, \\; \\frac{m+1}{n} + p \\in \\mathbb{Z}', a: 'ax^{-n}+b = t^s' },
+
+            // ==========================================
+            // ⚡ ПРОИЗВОДНЫЕ (Расширенная)
+            // ==========================================
+            // Базовые
+            { type: 'deriv', q: '(x^n)\'', a: 'nx^{n-1}' },
+            { type: 'deriv', q: '(\\sqrt{x})\'', a: '\\frac{1}{2\\sqrt{x}}' },
+            { type: 'deriv', q: '(\\frac{1}{x})\'', a: '-\\frac{1}{x^2}' },
+
+            // Показательные и логарифмические
+            { type: 'deriv', q: '(a^x)\'', a: 'a^x \\ln a' },
+            { type: 'deriv', q: '(e^x)\'', a: 'e^x' },
+            { type: 'deriv', q: '(\\log_a x)\'', a: '\\frac{1}{x \\ln a}' },
+            { type: 'deriv', q: '(\\ln x)\'', a: '\\frac{1}{x}' },
+            { type: 'deriv', q: '(u^v)\' \\text{ (Показ.-степенная)}', a: 'u^v (v\'\\ln u + v\\frac{u\'}{u})' },
+
+            // Правила дифференцирования
+            { type: 'deriv', q: '(uv)\'', a: 'u\'v + uv\'' },
+            { type: 'deriv', q: '(\\frac{u}{v})\'', a: '\\frac{u\'v - uv\'}{v^2}' },
+            { type: 'deriv', q: '(f(g(x)))\'', a: 'f\'(g(x)) \\cdot g\'(x)' },
+
+            // Тригонометрия
+            { type: 'deriv', q: '(\\sin x)\'', a: '\\cos x' },
+            { type: 'deriv', q: '(\\cos x)\'', a: '-\\sin x' },
+            { type: 'deriv', q: '(\\tan x)\'', a: '\\frac{1}{\\cos^2 x}' },
+            { type: 'deriv', q: '(\\cot x)\'', a: '-\\frac{1}{\\sin^2 x}' },
+
+            // Обратные тригонометрические
+            { type: 'deriv', q: '(\\arcsin x)\'', a: '\\frac{1}{\\sqrt{1-x^2}}' },
+            { type: 'deriv', q: '(\\arccos x)\'', a: '-\\frac{1}{\\sqrt{1-x^2}}' },
+            { type: 'deriv', q: '(\\arctan x)\'', a: '\\frac{1}{1+x^2}' },
+            { type: 'deriv', q: '(\\text{arccot } x)\'', a: '-\\frac{1}{1+x^2}' },
+
+            // Гиперболические
+            { type: 'deriv', q: '(\\text{sh } x)\'', a: '\\text{ch } x' },
+            { type: 'deriv', q: '(\\text{ch } x)\'', a: '\\text{sh } x' },
+            { type: 'deriv', q: '(\\text{th } x)\'', a: '\\frac{1}{\\text{ch}^2 x}' },
+
+            // Обратные гиперболические (Ареа-функции)
+            { type: 'deriv', q: '(\\text{arsh } x)\'', a: '\\frac{1}{\\sqrt{1+x^2}}' },
+            { type: 'deriv', q: '(\\text{arch } x)\'', a: '\\frac{1}{\\sqrt{x^2-1}}' },
+            { type: 'deriv', q: '(\\text{arth } x)\'', a: '\\frac{1}{1-x^2}' },
+
+            // ==========================================
+            // ∫ ИНТЕГРАЛЫ (Расширенная)
+            // ==========================================
+            // Степенные и общие
+            { type: 'integ', q: '\\int x^n dx, \\; n \\neq -1', a: '\\frac{x^{n+1}}{n+1}' },
+            { type: 'integ', q: '\\int \\frac{dx}{x}', a: '\\ln|x|' },
+            { type: 'integ', q: '\\int u dv \\text{ (По частям)}', a: 'uv - \\int v du' },
+
+            // Показательные
+            { type: 'integ', q: '\\int a^x dx', a: '\\frac{a^x}{\\ln a}' },
+            { type: 'integ', q: '\\int e^x dx', a: 'e^x' },
+            { type: 'integ', q: '\\int \\ln x dx', a: 'x\\ln x - x' }, // Важный табличный!
+
+            // Тригонометрические
+            { type: 'integ', q: '\\int \\cos x dx', a: '\\sin x' },
+            { type: 'integ', q: '\\int \\sin x dx', a: '-\\cos x' },
+            { type: 'integ', q: '\\int \\frac{dx}{\\cos^2 x}', a: '\\tan x' },
+            { type: 'integ', q: '\\int \\frac{dx}{\\sin^2 x}', a: '-\\cot x' },
+            { type: 'integ', q: '\\int \\tan x dx', a: '-\\ln|\\cos x|' },
+            { type: 'integ', q: '\\int \\cot x dx', a: '\\ln|\\sin x|' },
+            { type: 'integ', q: '\\int \\frac{dx}{\\sin x}', a: '\\ln|\\tan\\frac{x}{2}|' },
+            { type: 'integ', q: '\\int \\frac{dx}{\\cos x}', a: '\\ln|\\tan(\\frac{x}{2} + \\frac{\\pi}{4})|' },
+
+            // Дроби и корни (Арки и Логарифмы)
+            { type: 'integ', q: '\\int \\frac{dx}{a^2+x^2}', a: '\\frac{1}{a}\\arctan\\frac{x}{a}' },
+            { type: 'integ', q: '\\int \\frac{dx}{a^2-x^2} \\text{ (Высокий)}', a: '\\frac{1}{2a}\\ln\\left|\\frac{a+x}{a-x}\\right|' },
+            { type: 'integ', q: '\\int \\frac{dx}{x^2-a^2} \\text{ (Высокий)}', a: '\\frac{1}{2a}\\ln\\left|\\frac{x-a}{x+a}\\right|' },
+            { type: 'integ', q: '\\int \\frac{dx}{\\sqrt{a^2-x^2}}', a: '\\arcsin\\frac{x}{a}' },
+            { type: 'integ', q: '\\int \\frac{dx}{\\sqrt{x^2 \\pm a^2}} \\text{ (Длинный)}', a: '\\ln|x + \\sqrt{x^2 \\pm a^2}|' },
+
+            // Гиперболические
+            { type: 'integ', q: '\\int \\text{sh } x dx', a: '\\text{ch } x' },
+            { type: 'integ', q: '\\int \\text{ch } x dx', a: '\\text{sh } x' },
+            { type: 'integ', q: '\\int \\text{th } x dx', a: '\\ln(\\text{ch } x)' },
+
+            // ==========================================
+            // 🛑 ПРЕДЕЛЫ (Замечательные и Эквивалентности при x -> 0)
+            // ==========================================
+            { type: 'limit', q: '\\lim_{x\\to 0} \\frac{\\sin x}{x}', a: '1' },
+            { type: 'limit', q: '\\lim_{x\\to 0} \\frac{\\tan x}{x}', a: '1' },
+            { type: 'limit', q: '\\lim_{x\\to 0} \\frac{\\arcsin x}{x}', a: '1' },
+            { type: 'limit', q: '\\lim_{x\\to 0} \\frac{1 - \\cos x}{x^2}', a: '\\frac{1}{2}' },
+            { type: 'limit', q: '\\lim_{x\\to 0} \\frac{\\ln(1+x)}{x}', a: '1' },
+            { type: 'limit', q: '\\lim_{x\\to 0} \\frac{e^x - 1}{x}', a: '1' },
+            { type: 'limit', q: '\\lim_{x\\to 0} \\frac{a^x - 1}{x}', a: '\\ln a' },
+            { type: 'limit', q: '\\lim_{x\\to 0} \\frac{(1+x)^\\alpha - 1}{x}', a: '\\alpha' },
+            { type: 'limit', q: '\\lim_{x\\to \\infty} (1 + \\frac{1}{x})^x', a: 'e' },
+            { type: 'limit', q: '\\lim_{x\\to 0} (1 + x)^{\\frac{1}{x}}', a: 'e' },
+            { type: 'limit', q: '\\lim_{n\\to \\infty} \\sqrt[n]{n}', a: '1' },
+
+            // ==========================================
+            // ∑ РЯДЫ (Разложения Маклорена)
+            // ==========================================
+            { type: 'series', q: 'e^x = \\dots', a: '1 + x + \\frac{x^2}{2!} + \\frac{x^3}{3!} + \\dots' },
+            { type: 'series', q: '\\sin x = \\dots', a: 'x - \\frac{x^3}{3!} + \\frac{x^5}{5!} - \\dots' },
+            { type: 'series', q: '\\cos x = \\dots', a: '1 - \\frac{x^2}{2!} + \\frac{x^4}{4!} - \\dots' },
+            { type: 'series', q: '\\ln(1+x) = \\dots', a: 'x - \\frac{x^2}{2} + \\frac{x^3}{3} - \\dots' },
+            { type: 'series', q: '(1+x)^\\alpha = \\dots', a: '1 + \\alpha x + \\frac{\\alpha(\\alpha-1)}{2!}x^2 + \\dots' },
+            { type: 'series', q: '\\frac{1}{1-x} = \\dots (|x|<1)', a: '1 + x + x^2 + x^3 + \\dots' },
+            { type: 'series', q: '\\arctan x = \\dots', a: 'x - \\frac{x^3}{3} + \\frac{x^5}{5} - \\dots' },
+            { type: 'series', q: '\\sum_{n=1}^{\\infty} \\frac{1}{n} \\text{ (Гармонический)}', a: '\\text{Расходится}' },
+            { type: 'series', q: '\\sum_{n=1}^{\\infty} \\frac{1}{n^p} \\text{ сходится при:}', a: 'p > 1' }
+        ];
+
+        // === ПЕРЕМЕННЫЕ СОСТОЯНИЯ ===
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const totalQuestions = 10; // Длина раунда
+
+        // === ЛОГИКА ===
+
+        function startQuiz(category) {
+            // Фильтруем вопросы по категории
+            const pool = database.filter(item => item.type === category);
+
+            if (pool.length < 4) {
+                alert("Мало вопросов в базе для этой категории!");
+                return;
+            }
+
+            // Перемешиваем и берем N вопросов
+            currentQuestions = shuffleArray([...pool]).slice(0, totalQuestions);
+
+            currentQuestionIndex = 0;
+            score = 0;
+
+            // Переключаем экран
+            document.getElementById('menuScreen').classList.remove('active');
+            document.getElementById('resultScreen').classList.remove('active');
+            document.getElementById('quizScreen').classList.add('active');
+
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            if (currentQuestionIndex >= currentQuestions.length) {
+                endQuiz();
+                return;
+            }
+
+            const qData = currentQuestions[currentQuestionIndex];
+
+            // Обновляем шапку
+            document.getElementById('progressText').innerText = `${currentQuestionIndex + 1} / ${currentQuestions.length}`;
+            document.getElementById('scoreText').innerText = score;
+
+            // Рендер вопроса
+            const qBox = document.getElementById('questionDisplay');
+            qBox.innerHTML = `$$ ${qData.q} = ? $$`;
+
+            // === НОВАЯ ЛОГИКА ПОДБОРА ОТВЕТОВ ===
+
+            // 1. Начинаем с правильного ответа
+            let finalOptions = [qData];
+
+            // 2. Создаем набор (Set) уже использованных текстов ответов, 
+            // чтобы исключить дубликаты (например, чтобы не было двух кнопок "1")
+            let usedAnswers = new Set();
+            usedAnswers.add(qData.a);
+
+            // 3. Берем всех кандидатов из той же категории
+            const pool = database.filter(item => item.type === qData.type);
+            const shuffledPool = shuffleArray([...pool]);
+
+            // 4. Ищем 3 уникальных неправильных ответа
+            for (let item of shuffledPool) {
+                // Если текст ответа еще не встречался
+                if (!usedAnswers.has(item.a)) {
+                    finalOptions.push(item);
+                    usedAnswers.add(item.a);
+                }
+                // Если набрали 4 варианта (1 правильный + 3 неправильных), останавливаемся
+                if (finalOptions.length === 4) break;
+            }
+
+            // Перемешиваем кнопки перед выводом
+            finalOptions = shuffleArray(finalOptions);
+            // =====================================
+
+            const optContainer = document.getElementById('optionsContainer');
+            optContainer.innerHTML = '';
+
+            finalOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+
+                // Проверяем правильность: сравниваем текст ответа с правильным
+                const isCorrect = (opt.a === qData.a);
+
+                btn.innerHTML = `$$ ${opt.a} $$`;
+
+                btn.onclick = () => checkAnswer(btn, isCorrect);
+                optContainer.appendChild(btn);
+            });
+
+            // Заставляем MathJax отрисовать новые формулы
+            MathJax.typesetPromise();
+        }
+
+        function checkAnswer(btn, isCorrect) {
+            // Блокируем все кнопки
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+                score++;
+            } else {
+                btn.classList.add('wrong');
+                // Подсветить правильный
+                buttons.forEach(b => {
+                    // Сравниваем контент (грязно, но работает, так как мы знаем, что рендерили)
+                    // Лучше найти кнопку, у которой onclick ссылался на true
+                    // Но проще просто передать правильность при создании
+                    // В данном случае мы не сохранили ссылку на правильную кнопку явно, 
+                    // но можем найти её перебором, если захотим.
+                    // Давайте просто сделаем задержку.
+                });
+
+                // Найдем правильную и подсветим её
+                const qData = currentQuestions[currentQuestionIndex];
+                // Это немного сложно из-за MathJax преобразования, поэтому
+                // мы просто подождем. В обучающих целях иногда лучше показать правильный ответ.
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                renderQuestion();
+            }, 1000);
+        }
+
+        function endQuiz() {
+            document.getElementById('quizScreen').classList.remove('active');
+            document.getElementById('resultScreen').classList.add('active');
+
+            const finalEl = document.getElementById('finalScore');
+            finalEl.innerText = `${score} / ${currentQuestions.length}`;
+
+            const msg = document.getElementById('feedbackMsg');
+            const percent = score / currentQuestions.length;
+
+            if (percent === 1) msg.innerText = "Идеально! Ты Бог матана! 🦾";
+            else if (percent >= 0.8) msg.innerText = "Отлично! Почти зачет. 🔥";
+            else if (percent >= 0.5) msg.innerText = "Нормально, но нужно повторить. 📚";
+            else msg.innerText = "Срочно на пересдачу! 💀";
+        }
+
+        function toMenu() {
+            document.getElementById('quizScreen').classList.remove('active');
+            document.getElementById('resultScreen').classList.remove('active');
+            document.getElementById('menuScreen').classList.add('active');
+        }
+
+        // Утилита для перемешивания массива (Fisher-Yates)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+    </script>
+</body>
+
+</html>
