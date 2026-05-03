@@ -1,0 +1,230 @@
+{
+  "categories": [
+    {
+      "id": "trig",
+      "title": "Тригонометрия",
+      "icon": "📐",
+      "questions": [
+        { "q": "\\sin(\\alpha + \\beta)", "a": "\\sin\\alpha\\cos\\beta + \\cos\\alpha\\sin\\beta" },
+        { "q": "\\sin(\\alpha - \\beta)", "a": "\\sin\\alpha\\cos\\beta - \\cos\\alpha\\sin\\beta" },
+        { "q": "\\cos(\\alpha + \\beta)", "a": "\\cos\\alpha\\cos\\beta - \\sin\\alpha\\sin\\beta" },
+        { "q": "\\cos(\\alpha - \\beta)", "a": "\\cos\\alpha\\cos\\beta + \\sin\\alpha\\sin\\beta" },
+        { "q": "\\tan(\\alpha + \\beta)", "a": "\\frac{\\tan\\alpha + \\tan\\beta}{1 - \\tan\\alpha\\tan\\beta}" },
+        { "q": "\\sin 2\\alpha", "a": "2\\sin\\alpha\\cos\\alpha" },
+        { "q": "\\cos 2\\alpha", "a": "\\cos^2\\alpha - \\sin^2\\alpha" },
+        { "q": "\\sin 3\\alpha", "a": "3\\sin\\alpha - 4\\sin^3\\alpha" },
+        { "q": "\\cos 3\\alpha", "a": "4\\cos^3\\alpha - 3\\cos\\alpha" },
+        { "q": "\\sin^2\\alpha", "a": "\\frac{1 - \\cos 2\\alpha}{2}" },
+        { "q": "\\cos^2\\alpha", "a": "\\frac{1 + \\cos 2\\alpha}{2}" },
+        { "q": "\\sin^3\\alpha", "a": "\\frac{3\\sin\\alpha - \\sin 3\\alpha}{4}" },
+        { "q": "\\sin\\alpha + \\sin\\beta", "a": "2\\sin\\frac{\\alpha+\\beta}{2}\\cos\\frac{\\alpha-\\beta}{2}" },
+        { "q": "\\cos\\alpha - \\cos\\beta", "a": "-2\\sin\\frac{\\alpha+\\beta}{2}\\sin\\frac{\\alpha-\\beta}{2}" },
+        { "q": "\\sin\\alpha \\cos\\beta", "a": "\\frac{1}{2}[\\sin(\\alpha-\\beta) + \\sin(\\alpha+\\beta)]" },
+        { "q": "\\cos\\alpha \\cos\\beta", "a": "\\frac{1}{2}[\\cos(\\alpha-\\beta) + \\cos(\\alpha+\\beta)]" },
+        { "q": "\\sin\\alpha \\sin\\beta", "a": "\\frac{1}{2}[\\cos(\\alpha-\\beta) - \\cos(\\alpha+\\beta)]" },
+        { "q": "\\sin x \\text{ через } t=\\tan(x/2)", "a": "\\frac{2t}{1+t^2}" },
+        { "q": "\\cos x \\text{ через } t=\\tan(x/2)", "a": "\\frac{1-t^2}{1+t^2}" }
+      ]
+    },
+    {
+      "id": "subs",
+      "title": "Подстановки",
+      "icon": "🔁",
+      "questions": [
+        { "q": "\\int R(\\sin x, \\cos x)dx", "a": "t = \\tan\\frac{x}{2} \\; \\text{(универсальная)}" },
+        { "q": "\\int R(\\sin^2 x, \\cos^2 x)dx", "a": "t = \\tan x" },
+        { "q": "\\sqrt{a^2 - x^2}", "a": "x = a\\sin t" },
+        { "q": "\\sqrt{x^2 - a^2}", "a": "x = \\frac{a}{\\cos t}" },
+        { "q": "\\sqrt{x^2 + a^2} \\; (Trig)", "a": "x = a\\tan t" },
+        { "q": "\\sqrt{x^2 + a^2} \\; (Hyp)", "a": "x = a \\; \\text{sh } t" },
+        { "q": "\\sqrt{x^2 - a^2} \\; (Hyp)", "a": "x = a \\; \\text{ch } t" },
+        { "q": "\\int \\frac{dx}{(1+x^2)^2}", "a": "x = \\tan t" },
+        { "q": "\\int \\sqrt[n]{\\frac{ax+b}{cx+d}} dx", "a": "t^n = \\frac{ax+b}{cx+d}" },
+        { "q": "x^m(a+bx^n)^p, \\; p \\in \\mathbb{Z}", "a": "x = t^k \\text{ (общий знаменатель)}" },
+        { "q": "x^m(a+bx^n)^p, \\; \\frac{m+1}{n} \\in \\mathbb{Z}", "a": "a+bx^n = t^s" },
+        { "q": "x^m(a+bx^n)^p, \\; \\frac{m+1}{n} + p \\in \\mathbb{Z}", "a": "ax^{-n}+b = t^s" }
+      ]
+    },
+    {
+      "id": "deriv",
+      "title": "Производные",
+      "icon": "⚡",
+      "questions": [
+        { "q": "(x^n)'", "a": "nx^{n-1}" },
+        { "q": "(\\sqrt{x})'", "a": "\\frac{1}{2\\sqrt{x}}" },
+        { "q": "(\\frac{1}{x})'", "a": "-\\frac{1}{x^2}" },
+        { "q": "(a^x)'", "a": "a^x \\ln a" },
+        { "q": "(e^x)'", "a": "e^x" },
+        { "q": "(\\log_a x)'", "a": "\\frac{1}{x \\ln a}" },
+        { "q": "(\\ln x)'", "a": "\\frac{1}{x}" },
+        { "q": "(u^v)'", "a": "u^v (v'\\ln u + v\\frac{u'}{u})" },
+        { "q": "(uv)'", "a": "u'v + uv'" },
+        { "q": "(\\frac{u}{v})'", "a": "\\frac{u'v - uv'}{v^2}" },
+        { "q": "(f(g(x)))'", "a": "f'(g(x)) \\cdot g'(x)" },
+        { "q": "(\\sin x)'", "a": "\\cos x" },
+        { "q": "(\\cos x)'", "a": "-\\sin x" },
+        { "q": "(\\tan x)'", "a": "\\frac{1}{\\cos^2 x}" },
+        { "q": "(\\cot x)'", "a": "-\\frac{1}{\\sin^2 x}" },
+        { "q": "(\\arcsin x)'", "a": "\\frac{1}{\\sqrt{1-x^2}}" },
+        { "q": "(\\arccos x)'", "a": "-\\frac{1}{\\sqrt{1-x^2}}" },
+        { "q": "(\\arctan x)'", "a": "\\frac{1}{1+x^2}" },
+        { "q": "(\\text{sh } x)'", "a": "\\text{ch } x" },
+        { "q": "(\\text{ch } x)'", "a": "\\text{sh } x" },
+        { "q": "(\\text{arsh } x)'", "a": "\\frac{1}{\\sqrt{1+x^2}}" },
+        { "q": "(\\text{arch } x)'", "a": "\\frac{1}{\\sqrt{x^2-1}}" }
+      ]
+    },
+    {
+      "id": "integ",
+      "title": "Интегралы",
+      "icon": "∫",
+      "questions": [
+        { "q": "\\int x^n dx, \\; n \\neq -1", "a": "\\frac{x^{n+1}}{n+1}" },
+        { "q": "\\int \\frac{dx}{x}", "a": "\\ln|x|" },
+        { "q": "\\int u dv", "a": "uv - \\int v du" },
+        { "q": "\\int a^x dx", "a": "\\frac{a^x}{\\ln a}" },
+        { "q": "\\int e^x dx", "a": "e^x" },
+        { "q": "\\int \\ln x dx", "a": "x\\ln x - x" },
+        { "q": "\\int \\cos x dx", "a": "\\sin x" },
+        { "q": "\\int \\sin x dx", "a": "-\\cos x" },
+        { "q": "\\int \\frac{dx}{\\cos^2 x}", "a": "\\tan x" },
+        { "q": "\\int \\tan x dx", "a": "-\\ln|\\cos x|" },
+        { "q": "\\int \\frac{dx}{\\sin x}", "a": "\\ln|\\tan\\frac{x}{2}|" },
+        { "q": "\\int \\frac{dx}{a^2+x^2}", "a": "\\frac{1}{a}\\arctan\\frac{x}{a}" },
+        { "q": "\\int \\frac{dx}{a^2-x^2}", "a": "\\frac{1}{2a}\\ln\\left|\\frac{a+x}{a-x}\\right|" },
+        { "q": "\\int \\frac{dx}{\\sqrt{a^2-x^2}}", "a": "\\arcsin\\frac{x}{a}" },
+        { "q": "\\int \\frac{dx}{\\sqrt{x^2 \\pm a^2}}", "a": "\\ln|x + \\sqrt{x^2 \\pm a^2}|" },
+        { "q": "\\int \\text{sh } x dx", "a": "\\text{ch } x" },
+        { "q": "\\int \\text{th } x dx", "a": "\\ln(\\text{ch } x)" }
+      ]
+    },
+    {
+      "id": "advanced_int",
+      "title": "Криволинейные / Поверхностные",
+      "icon": "🌀",
+      "questions": [
+        { "q": "ds \\text{ (кривая } y=f(x))", "a": "\\sqrt{1 + (f'(x))^2}dx" },
+        { "q": "ds \\text{ (парам. } x(t), y(t))", "a": "\\sqrt{(x')^2 + (y')^2}dt" },
+        { "q": "\\oint_L Pdx + Qdy \\text{ (Грин)}", "a": "\\iint_D (\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}) dxdy" },
+        { "q": "dS \\text{ (пов-ть } z=f(x,y))", "a": "\\sqrt{1 + z_x^2 + z_y^2} dxdy" },
+        { "q": "\\iint_S \\mathbf{F} \\cdot d\\mathbf{S} \\text{ (Остр.-Гаусс)}", "a": "\\iiint_V \\text{div } \\mathbf{F} dV" },
+        { "q": "\\oint_L \\mathbf{F} \\cdot d\\mathbf{r} \\text{ (Стокс)}", "a": "\\iint_S \\text{rot } \\mathbf{F} \\cdot d\\mathbf{S}" },
+        { "q": "\\text{div } \\mathbf{F} \\text{ (дивергенция)}", "a": "\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} + \\frac{\\partial R}{\\partial z}" },
+        { "q": "\\text{rot } \\mathbf{F} \\text{ (ротор)}", "a": "\\nabla \\times \\mathbf{F}" },
+        { "q": "\\text{Якобиан (полярные)}", "a": "r" },
+        { "q": "\\text{Якобиан (сферические)}", "a": "r^2 \\sin \\theta" },
+        { "q": "\\int_L f ds \\text{ (1-й род)}", "a": "\\text{Независим от направления } L" },
+        { "q": "\\int_L Pdx + Qdy \\text{ (2-й род)}", "a": "\\text{Меняет знак при смене направления}" },
+        { "q": "\\text{Условие потенц. поля } \\mathbf{F}(P,Q)", "a": "\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}" }
+      ]
+    },
+    {
+      "id": "limit",
+      "title": "Пределы",
+      "icon": "🛑",
+      "questions": [
+        { "q": "\\lim_{x\\to 0} \\frac{\\sin x}{x}", "a": "1" },
+        { "q": "\\lim_{x\\to 0} \\frac{1 - \\cos x}{x^2}", "a": "\\frac{1}{2}" },
+        { "q": "\\lim_{x\\to 0} \\frac{\\ln(1+x)}{x}", "a": "1" },
+        { "q": "\\lim_{x\\to 0} \\frac{e^x - 1}{x}", "a": "1" },
+        { "q": "\\lim_{x\\to 0} \\frac{a^x - 1}{x}", "a": "\\ln a" },
+        { "q": "\\lim_{x\\to \\infty} (1 + \\frac{1}{x})^x", "a": "e" },
+        { "q": "\\lim_{n\\to \\infty} \\sqrt[n]{n}", "a": "1" }
+      ]
+    },
+    {
+      "id": "series",
+      "title": "Ряды",
+      "icon": "∑",
+      "questions": [
+        { "q": "e^x", "a": "1 + x + \\frac{x^2}{2!} + \\frac{x^3}{3!} + \\dots" },
+        { "q": "\\sin x", "a": "x - \\frac{x^3}{3!} + \\frac{x^5}{5!} - \\dots" },
+        { "q": "\\cos x", "a": "1 - \\frac{x^2}{2!} + \\frac{x^4}{4!} - \\dots" },
+        { "q": "\\ln(1+x)", "a": "x - \\frac{x^2}{2} + \\frac{x^3}{3} - \\dots" },
+        { "q": "\\frac{1}{1-x}", "a": "1 + x + x^2 + x^3 + \\dots" },
+        { "q": "\\sum \\frac{1}{n^p} \\text{ сходится при:}", "a": "p > 1" },
+        { "q": "\\text{Гармонический ряд } \\sum \\frac{1}{n}", "a": "\\text{Расходится}" }
+      ]
+    },
+    {
+      "id": "line_int",
+      "title": "Криволинейные интегралы",
+      "icon": "➰",
+      "questions": [
+        { "q": "\\int_L f(x,y) dl \\text{ при } y = y(x), x \\in [a,b]", "a": "\\int_a^b f(x,y(x))\\sqrt{1+(y')^2} dx" },
+        { "q": "dl \\text{ в полярных координатах } \\rho = \\rho(\\varphi)", "a": "\\sqrt{\\rho^2 + (\\rho')^2} d\\varphi" },
+        { "q": "dl \\text{ в параметрическом виде (3D)}", "a": "\\sqrt{(x')^2 + (y')^2 + (z')^2} dt" },
+        { "q": "\\int_L Pdx + Qdy + Rdz \\text{ (в параметрическом виде)}", "a": "\\int_a^b (P x' + Q y' + R z') dt" },
+        { "q": "\\text{Связь крив. интегралов 1-го и 2-го рода}", "a": "\\int_L Pdx + Qdy + Rdz = \\int_L (P\\cos\\alpha + Q\\cos\\beta + R\\cos\\gamma) dl" },
+        { "q": "\\int_{BA} f(x,y,z) dl \\text{ (смена направления)}", "a": "\\int_{AB} f(x,y,z) dl \\; \\text{(знак не меняется)}" },
+        { "q": "\\int_{BA} Pdx + Qdy + Rdz \\text{ (смена направления)}", "a": "-\\int_{AB} Pdx + Qdy + Rdz \\; \\text{(знак меняется)}" },
+        { "q": "\\text{Условие независимости } \\int Pdx+Qdy \\text{ от пути}", "a": "\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}" },
+        { "q": "\\text{Условие независимости } \\int \\mathbf{F} d\\mathbf{r} \\text{ от пути (3D)}", "a": "\\text{rot } \\mathbf{F} = \\mathbf{0}" },
+        { "q": "\\text{Масса кривой } L \\text{ с плотностью } \\mu(x,y,z)", "a": "\\int_L \\mu(x,y,z) dl" },
+        { "q": "\\text{Работа силы } \\mathbf{F} \\text{ вдоль кривой } L", "a": "\\int_L \\mathbf{F} \\cdot d\\mathbf{r} = \\int_L Pdx + Qdy + Rdz" },
+        { "q": "\\oint_L dl \\text{ по окружности радиуса } R \\; (\\text{в уме})", "a": "2\\pi R \\; \\text{(длина окружности)}" },
+        { "q": "\\oint_L y dx + x dy \\; (\\text{в уме})", "a": "0 \\; \\text{(подынтегральное выражение — полный дифференциал } d(xy)\\text{)}" },
+        { "q": "\\oint_L (2x+y)dx + (x+3y)dy \\; (\\text{в уме})", "a": "0 \\; \\text{(поле потенциально, т.к. } \\partial Q/\\partial x = \\partial P/\\partial y = 1\\text{)}" },
+        { "q": "dl \\text{ (дифференциал дуги в } \\mathbb{R}^3)", "a": "\\sqrt{(dx)^2 + (dy)^2 + (dz)^2}" },
+        { "q": "dl \\text{ в полярных координатах } \\rho(\\varphi)", "a": "\\sqrt{\\rho^2 + (\\rho')^2} d\\varphi" },
+        { "q": "dl \\text{ в сферических координатах } (r, \\theta, \\psi)", "a": "\\sqrt{(dr)^2 + r^2(d\theta)^2 + r^2\\sin^2\\theta(d\\psi)^2}" },
+        { "q": "\\int_L Pdx+Qdy+Rdz \\text{ (через параметр } t)", "a": "\\int_{t_1}^{t_2} (P x'_t + Q y'_t + R z'_t) dt" },
+        { "q": "\\text{Связь 1-го и 2-го рода: } \\int_L \\mathbf{A} \\cdot d\\mathbf{r}", "a": "\\int_L (A_x\\cos\\alpha + A_y\\cos\\beta + A_z\\cos\\gamma) dl" },
+        { "q": "\\text{Условие } Pdx+Qdy = dU \\text{ (в односвязной обл.)}", "a": "\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}" },
+        { "q": "\\text{Восстановление } U(x,y) \\text{ по } dU = Pdx+Qdy", "a": "U = \\int_{x_0}^x P(t, y_0) dt + \\int_{y_0}^y Q(x, t) dt" },
+        { "q": "\\oint_L (xdy - ydx) \\text{ по замкнутому контуру}", "a": "2 \\cdot \\text{Area}(D)" },
+        { "q": "\\oint_L f(r) \\mathbf{r} \\cdot d\\mathbf{r} \\text{ по замкн. контуру}", "a": "0 \\; (\\text{поле центральное/потенциальное})" }
+    ]
+    },  
+    {
+      "id": "surf_int",
+      "title": "Поверхностные интегралы",
+      "icon": "🌐",
+      "questions": [
+        { "q": "dS \\text{ для явной поверхности } z = z(x,y)", "a": "\\sqrt{1 + (z'_x)^2 + (z'_y)^2} dx dy" },
+        { "q": "dS \\text{ для парам. поверхности } \\mathbf{r}(u,v)", "a": "|\\mathbf{r}'_u \\times \\mathbf{r}'_v| dudv = \\sqrt{EG-F^2} dudv" },
+        { "q": "\\iint_S f(x,y,z) dS \\text{ через двойной (на } D_{xy})", "a": "\\iint_{D_{xy}} f(x,y,z(x,y))\\sqrt{1+(z'_x)^2+(z'_y)^2} dxdy" },
+        { "q": "\\text{Связь поверхн. интегралов 1-го и 2-го рода}", "a": "\\iint_S Pdydz + Qdzdx + Rdxdy = \\iint_S (P\\cos\\alpha + Q\\cos\\beta + R\\cos\\gamma) dS" },
+        { "q": "\\iint_S R(x,y,z) dxdy \\text{ через двойной (верх. сторона)}", "a": "\\iint_{D_{xy}} R(x,y,z(x,y)) dxdy" },
+        { "q": "\\iint_S Pdydz+Qdzdx+Rdxdy \\text{ через двойной по } D_{xy}", "a": "\\iint_{D_{xy}} (-P\\frac{\\partial z}{\\partial x} - Q\\frac{\\partial z}{\\partial y} + R) dxdy" },
+        { "q": "\\iint_{S^-} R dxdy \\text{ (смена стороны поверхности)}", "a": "-\\iint_{S^+} R dxdy \\; \\text{(знак меняется)}" },
+        { "q": "\\iint_S dS \\text{ по сфере радиуса } R \\; (\\text{в уме})", "a": "4\\pi R^2 \\; \\text{(площадь сферы)}" },
+        { "q": "\\text{Масса оболочки } S \\text{ с плотностью } \\mu(x,y,z)", "a": "\\iint_S \\mu(x,y,z) dS" },
+        { "q": "dS \\text{ (элемент площади поверхности } \\mathbf{r}(u,v))", "a": "\\sqrt{EG - F^2} dudv" },
+        { "q": "dS \\text{ для поверхности } F(x,y,z)=0", "a": "\\frac{|\\nabla F|}{|F'_z|} dxdy" },
+        { "q": "dS \\text{ для сферы радиуса } a \\text{ (сфер. коорд.)}", "a": "a^2 \\sin\\theta d\\theta d\\psi" },
+        { "q": "\\iint_S Pdydz + Qdzdx + Rdxdy \\text{ (2-й род)}", "a": "\\iint_S (P\\cos\\alpha + Q\\cos\\beta + R\\cos\\gamma) dS" },
+        { "q": "\\iint_S \\frac{\\partial u}{\\partial n} dS", "a": "\\iint_S \\nabla u \\cdot \\mathbf{n} dS" },
+        { "q": "\\text{Площадь поверхности } z = f(x,y)", "a": "\\iint_D \\sqrt{1 + f'_x^2 + f'_y^2} dxdy" },
+        { "q": "\\iint_S (x^2+y^2+z^2) dS \\text{ по сфере } r=a", "a": "4\\pi a^4" },
+        { "q": "\\iint_S f(x,y,z) dS \\text{ если } S \\text{ симметрична отн. } z=0, f \\text{ нечетна по } z", "a": "0" }
+      ]
+    },
+    {
+      "id": "field_and_theorems",
+      "title": "Теория поля и интегральные теоремы",
+      "icon": "🌪️",
+      "questions": [
+        { "q": "\\text{Формула Грина}", "a": "\\oint_L Pdx + Qdy = \\iint_D (\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}) dxdy" },
+        { "q": "\\text{Формула Гаусса-Остроградского}", "a": "\\oiint_S Pdydz + Qdzdx + Rdxdy = \\iiint_V (\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} + \\frac{\\partial R}{\\partial z}) dV" },
+        { "q": "\\text{Формула Стокса}", "a": "\\oint_L \\mathbf{F} d\\mathbf{r} = \\iint_S \\text{rot } \\mathbf{F} \\cdot d\\mathbf{S}" },
+        { "q": "\\text{Площадь } D \\text{ через формулу Грина}", "a": "S = \\frac{1}{2} \\oint_L xdy - ydx" },
+        { "q": "\\text{Объем } V \\text{ через формулу Гаусса-Острогр.}", "a": "V = \\frac{1}{3} \\oiint_S xdydz + ydzdx + zdxdy" },
+        { "q": "\\text{Дивергенция } \\text{div } \\mathbf{F} \\text{ для } \\mathbf{F}=(P,Q,R)", "a": "\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} + \\frac{\\partial R}{\\partial z}" },
+        { "q": "\\text{Ротор } \\text{rot } \\mathbf{F} \\text{ (через наблу)}", "a": "\\nabla \\times \\mathbf{F}" },
+        { "q": "\\text{Градиент } \\text{grad } u", "a": "(\\frac{\\partial u}{\\partial x}, \\frac{\\partial u}{\\partial y}, \\frac{\\partial u}{\\partial z})" },
+        { "q": "\\text{Оператор Лапласа } \\Delta u", "a": "\\frac{\\partial^2 u}{\\partial x^2} + \\frac{\\partial^2 u}{\\partial y^2} + \\frac{\\partial^2 u}{\\partial z^2}" },
+        { "q": "\\text{Производная по направлению } \\mathbf{l}", "a": "\\frac{\\partial u}{\\partial \\mathbf{l}} = \\text{grad } u \\cdot \\mathbf{l}^0" },
+        { "q": "\\text{Поле } \\mathbf{F} \\text{ соленоидально, если:}", "a": "\\text{div } \\mathbf{F} = 0" },
+        { "q": "\\text{Поле } \\mathbf{F} \\text{ потенциально, если:}", "a": "\\text{rot } \\mathbf{F} = \\mathbf{0}" },
+        { "q": "\\text{rot}(\\text{grad } u)", "a": "\\mathbf{0}" },
+        { "q": "\\text{div}(\\text{rot } \\mathbf{F})", "a": "0" },
+        { "q": "\\text{Поток векторного поля } \\mathbf{F} \\text{ через } S", "a": "\\iint_S \\mathbf{F} \\cdot d\\mathbf{S} = \\iint_S \\mathbf{F} \\cdot \\mathbf{n} dS" },
+        { "q": "\\text{Циркуляция поля } \\mathbf{F} \\text{ по контуру } L", "a": "\\oint_L \\mathbf{F} \\cdot d\\mathbf{r}" },
+        { "q": "\\oiint_S x dydz + y dzdx + z dxdy \\; (\\text{в уме})", "a": "3 \\cdot V \\; (\\text{где } V — \\text{объем тела внутри поверхности})" },
+        { "q": "\\oiint_S \\mathbf{r} \\cdot d\\mathbf{S} \\text{ по сфере радиуса } R \\; (\\text{в уме})", "a": "4\\pi R^3 \\; (\\text{div }\\mathbf{r} = 3\\text{, по Гауссу-Острогр. утроенный объем шара})" },
+        { "q": "\\oint_L xdy - ydx \\text{ по замкнутому контуру } \\; (\\text{в уме})", "a": "2 \\cdot S \\; (\\text{где } S — \\text{площадь фигуры, ограниченной контуром})" }
+      ]
+    }
+  ]
+}
